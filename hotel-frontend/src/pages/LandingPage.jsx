@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Navbar from '../layouts/Navbar';
 
 const LandingPage = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -6,7 +7,7 @@ const LandingPage = () => {
   const [lightboxImage, setLightboxImage] = useState(null);
   const [tableNumber, setTableNumber] = useState(null);
 
-  // Translations
+  // Updated Translations with Navbar items
   const translations = {
     en: {
       welcome: "Kimjai Hotel",
@@ -23,6 +24,8 @@ const LandingPage = () => {
       gallery: "Our Gallery",
       contact: "Need Help?",
       tableWelcome: "Welcome to Table",
+      home: "Home",
+      rooms: "Rooms",
     },
     es: {
       welcome: "Hotel Kimjai",
@@ -39,6 +42,8 @@ const LandingPage = () => {
       gallery: "Nuestra Galería",
       contact: "¿Necesitas ayuda?",
       tableWelcome: "Bienvenido a la Mesa",
+      home: "Inicio",
+      rooms: "Habitaciones",
     },
     fr: {
       welcome: "Hôtel Kimjai",
@@ -55,6 +60,8 @@ const LandingPage = () => {
       gallery: "Notre Galerie",
       contact: "Besoin d'aide?",
       tableWelcome: "Bienvenue à la Table",
+      home: "Accueil",
+      rooms: "Chambres",
     },
     sw: {
       welcome: "Hoteli ya Kimjai",
@@ -71,6 +78,8 @@ const LandingPage = () => {
       gallery: "Galeri Yetu",
       contact: "Unahitaji Msaada?",
       tableWelcome: "Karibu kwa Meza",
+      home: "Nyumbani",
+      rooms: "Vyumba",
     },
     zh: {
       welcome: "宁静酒店",
@@ -87,6 +96,8 @@ const LandingPage = () => {
       gallery: "我们的画廊",
       contact: "需要帮助？",
       tableWelcome: "欢迎来到桌",
+      home: "主页",
+      rooms: "客房",
     },
   };
 
@@ -119,34 +130,28 @@ const LandingPage = () => {
     const params = new URLSearchParams(window.location.search);
     const table = params.get("table");
     if (table) setTableNumber(table);
+
+    // Enable smooth scrolling globally
+    document.documentElement.style.scrollBehavior = 'smooth';
+    
+    return () => {
+      document.documentElement.style.scrollBehavior = '';
+    };
   }, []);
 
-  return (
+
+ return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-white relative overflow-hidden">
       {/* Decorative Background Elements */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-amber-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-orange-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
 
-      {/* Language Selector - Fixed Top Right */}
-      <div className="fixed top-6 right-6 z-50">
-        <select
-          value={language}
-          onChange={(e) => setLanguage(e.target.value)}
-          className="bg-white rounded-full shadow-lg px-4 py-2 pr-10 text-sm font-medium border-2 border-amber-600 cursor-pointer outline-none transition-all hover:bg-amber-50 focus:ring-2 focus:ring-amber-600 focus:ring-opacity-30 appearance-none"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23d97706'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'right 8px center',
-            backgroundSize: '20px'
-          }}
-        >
-          <option value="en">🇬🇧 English</option>
-          <option value="es">🇪🇸 Español</option>
-          <option value="fr">🇫🇷 Français</option>
-          <option value="sw">🇰🇪 Kiswahili</option>
-          <option value="zh">🇨🇳 中文</option>
-        </select>
-      </div>
+      {/* Add Navbar Component */}
+      <Navbar 
+        language={language} 
+        onLanguageChange={setLanguage}
+        translations={t}
+      />
 
       {/* Floating Contact Buttons - Fixed Bottom Right */}
       <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
@@ -172,224 +177,268 @@ const LandingPage = () => {
           </svg>
         </a>
       </div>
-            <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 py-12">
-              {/* Table Number Welcome (if QR scanned with table parameter) */}
-              {tableNumber && (
-                <div className="mb-6 bg-amber-100 border-2 border-amber-400 text-amber-800 px-6 py-3 rounded-lg animate-pulse">
-                  <p className="font-semibold">
-                    {t.tableWelcome} {tableNumber} 🪑
-                  </p>
-                </div>
-              )}
 
-              {/* Header / Branding with fade-in animation */}
-              <div
-                className={`text-center mb-12 transition-all duration-1000 transform ${
-                  isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"
-                }`}
-              >
-                {/* Animated Logo */}
-                <div className="mx-auto w-28 h-28 mb-6 rounded-full bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center shadow-2xl hover:scale-110 transition-transform duration-300 cursor-pointer">
-                  <span className="text-white text-5xl font-bold">KJ</span>
-                </div>
+      {/* Main Content with padding for navbar */}
+      <div className="relative z-10 flex flex-col items-center justify-center px-6 py-12 pt-24">
+        
+        {/* HOME SECTION */}
+        <section id="home" className="w-full max-w-6xl min-h-screen flex flex-col justify-center scroll-mt-20">
+          {/* Table Number Welcome (if QR scanned with table parameter) */}
+          {tableNumber && (
+            <div className="mb-6 bg-amber-100 border-2 border-amber-400 text-amber-800 px-6 py-3 rounded-lg animate-pulse">
+              <p className="font-semibold">
+                {t.tableWelcome} {tableNumber} 🪑
+              </p>
+            </div>
+          )}
 
-                <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
-                  {t.welcome}
-                </h1>
-                <p className="mt-4 text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">
-                  {t.tagline}
-                  <br />
-                  <span className="text-amber-600 font-semibold">{t.journey}</span>
-                </p>
-              </div>
-
-              {/* Quick Stats/Trust Indicators */}
-              <div
-                className={`grid grid-cols-3 gap-6 mb-12 transition-all duration-1000 delay-300 ${
-                  isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-                }`}
-              >
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-amber-600">50+</div>
-                  <div className="text-sm text-gray-500">Premium Rooms</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-amber-600">4.9★</div>
-                  <div className="text-sm text-gray-500">Guest Rating</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-amber-600">24/7</div>
-                  <div className="text-sm text-gray-500">Service</div>
-                </div>
-              </div>
-
-              {/* Hero Action Buttons with staggered animation */}
-              <div
-                className={`flex flex-col md:flex-row gap-6 mb-12 transition-all duration-1000 delay-500 ${
-                  isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
-                }`}
-              >
-                <button className="group px-10 py-5 bg-amber-600 text-white text-lg font-semibold rounded-2xl shadow-lg hover:shadow-2xl hover:bg-amber-700 transition-all duration-300 transform hover:-translate-y-1">
-                  <span className="flex items-center gap-2">
-                    🍽️ {t.walkIn}
-                    <svg
-                      className="w-5 h-5 group-hover:translate-x-1 transition-transform"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </span>
-                </button>
-
-                <button className="group px-10 py-5 bg-white border-2 border-amber-600 text-amber-700 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-2xl hover:bg-amber-600 hover:text-white transition-all duration-300 transform hover:-translate-y-1">
-                  <span className="flex items-center gap-2">
-                    🛏️ {t.bookRoom}
-                    <svg
-                      className="w-5 h-5 group-hover:translate-x-1 transition-transform"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </span>
-                </button>
-              </div>
-
-              {/* Quick Services Preview */}
-              <div
-                className={`grid md:grid-cols-3 gap-6 max-w-4xl mb-12 transition-all duration-1000 delay-700 ${
-                  isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-                }`}
-              >
-                {[
-                  { icon: "🍽️", title: t.dining, desc: t.diningDesc },
-                  { icon: "🏊", title: t.spa, desc: t.spaDesc },
-                  { icon: "📅", title: t.events, desc: t.eventsDesc },
-                ].map((service, i) => (
-                  <div
-                    key={i}
-                    className="bg-white/70 backdrop-blur-sm p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer border border-amber-100"
-                  >
-                    <div className="text-4xl mb-3">{service.icon}</div>
-                    <h3 className="text-lg font-bold text-gray-800 mb-2">{service.title}</h3>
-                    <p className="text-sm text-gray-600">{service.desc}</p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Image Gallery Section */}
-              <div
-                className={`w-full max-w-6xl mb-16 transition-all duration-1000 delay-900 ${
-                  isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-                }`}
-              >
-                <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
-                  {t.gallery}
-                </h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {galleryImages.map((image, i) => (
-                    <div
-                      key={i}
-                      onClick={() => setLightboxImage(image.url)}
-                      className="relative overflow-hidden rounded-xl shadow-lg cursor-pointer group h-48"
-                    >
-                      <img
-                        src={image.url}
-                        alt={image.alt}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                        <svg
-                          className="w-12 h-12 text-white"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
-                          />
-                        </svg>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Floating Scroll Indicator */}
-              <div className="animate-bounce mt-8">
-                <svg
-                  className="w-6 h-6 text-amber-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 14l-7 7m0 0l-7-7m7 7V3"
-                  />
-                </svg>
-              </div>
-
-              {/* Footer with enhanced styling */}
-              <div className="mt-16 text-center text-sm text-gray-500 space-y-2">
-                <div className="flex items-center justify-center gap-4 flex-wrap">
-                  <span className="flex items-center gap-1">
-                    📍 Nairobi, Kenya
-                  </span>
-                  <span className="hidden md:inline">•</span>
-                  <span className="flex items-center gap-1">
-                    ☎ +254 712 345 678
-                  </span>
-                  <span className="hidden md:inline">•</span>
-                  <span className="flex items-center gap-1">
-                    ✉️ info@kimjaihotel.ke
-                  </span>
-                </div>
-                <p className="mt-4 text-xs">© 2025 Kimjai Hotel. All Rights Reserved.</p>
-              </div>
+          {/* Header / Branding with fade-in animation */}
+          <div
+            className={`text-center mb-12 transition-all duration-1000 transform ${
+              isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"
+            }`}
+          >
+            {/* Animated Logo */}
+            <div className="mx-auto w-28 h-28 mb-6 rounded-full bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center shadow-2xl hover:scale-110 transition-transform duration-300 cursor-pointer">
+              <span className="text-white text-5xl font-bold">KJ</span>
             </div>
 
-            {/* Lightbox Modal for Gallery Images */}
-            {lightboxImage && (
-              <div
-                onClick={() => setLightboxImage(null)}
-                className="fixed inset-0 bg-black/90 z-[100] flex items-center justify-center p-4 cursor-pointer"
-              >
-                <button
-                  onClick={() => setLightboxImage(null)}
-                  className="absolute top-6 right-6 text-white hover:text-amber-400 transition-colors"
-                >
-                  <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-                <img
-                  src={lightboxImage}
-                  alt="Gallery Preview"
-                  className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
-                />
-              </div>
-            )}
+            <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+              {t.welcome}
+            </h1>
+            <p className="mt-4 text-gray-600 text-lg md:text-xl max-w-2xl mx-auto">
+              {t.tagline}
+              <br />
+              <span className="text-amber-600 font-semibold">{t.journey}</span>
+            </p>
           </div>
-        );
-      };
 
-      export default LandingPage;
+          {/* Quick Stats/Trust Indicators */}
+          <div
+            className={`grid grid-cols-3 gap-6 mb-12 transition-all duration-1000 delay-300 ${
+              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+            }`}
+          >
+            <div className="text-center">
+              <div className="text-3xl font-bold text-amber-600">50+</div>
+              <div className="text-sm text-gray-500">Premium Rooms</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-amber-600">4.9★</div>
+              <div className="text-sm text-gray-500">Guest Rating</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-amber-600">24/7</div>
+              <div className="text-sm text-gray-500">Service</div>
+            </div>
+          </div>
+
+          {/* Hero Action Buttons with staggered animation */}
+<div
+  className={`flex flex-col md:flex-row gap-6 mb-12 transition-all duration-1000 delay-500 ${
+    isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+  }`}
+>
+  {/* Walk-in Button */}
+  <button className="group px-10 py-5 bg-amber-600 text-white text-lg font-semibold rounded-2xl shadow-lg hover:shadow-2xl hover:bg-amber-700 transition-all duration-300 transform hover:-translate-y-1">
+    <span className="flex items-center gap-2">
+      🍽️ {t.walkIn}
+      <svg
+        className="w-5 h-5 group-hover:translate-x-1 transition-transform"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M9 5l7 7-7 7"
+        />
+      </svg>
+    </span>
+  </button>
+
+  {/* Booking Button */}
+  <button className="group px-10 py-5 bg-white border-2 border-amber-600 text-amber-700 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-2xl hover:bg-amber-600 hover:text-white transition-all duration-300 transform hover:-translate-y-1">
+    <span className="flex items-center gap-2">
+      <svg
+        className="w-5 h-5 group-hover:translate-x-1 transition-transform"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M9 5l7 7-7 7"
+        />
+      </svg>
+    </span>
+  </button>
+</div>
+</section>
+
+        {/* ROOMS SECTION - Placeholder */}
+        <section id="rooms" className="w-full max-w-6xl min-h-screen flex flex-col justify-center scroll-mt-20 py-16">
+          <div className="text-center mb-8">
+            <h2 className="text-4xl font-bold text-gray-800 mb-4">
+              {t.rooms}
+            </h2>
+            <p className="text-gray-600 text-lg">Comfortable accommodations await you</p>
+          </div>
+          {/* Room cards will go here in future */}
+        </section>
+
+        {/* DINING SECTION - Quick Services Preview */}
+        <section id="dining" className="w-full max-w-6xl min-h-screen flex flex-col justify-center scroll-mt-20 py-16">
+          <div
+            className={`grid md:grid-cols-3 gap-6 max-w-4xl mx-auto transition-all duration-1000 delay-700 ${
+              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+            }`}
+          >
+            {[
+              { icon: "🍽️", title: t.dining, desc: t.diningDesc },
+              { icon: "🏊", title: t.spa, desc: t.spaDesc },
+              { icon: "📅", title: t.events, desc: t.eventsDesc },
+            ].map((service, i) => (
+              <div
+                key={i}
+                className="bg-white/70 backdrop-blur-sm p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer border border-amber-100"
+              >
+                <div className="text-4xl mb-3">{service.icon}</div>
+                <h3 className="text-lg font-bold text-gray-800 mb-2">{service.title}</h3>
+                <p className="text-sm text-gray-600">{service.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* SPA SECTION - Placeholder */}
+        <section id="spa" className="w-full max-w-6xl min-h-screen flex flex-col justify-center scroll-mt-20 py-16">
+          <div className="text-center">
+            <h2 className="text-4xl font-bold text-gray-800 mb-4">{t.spa}</h2>
+            <p className="text-gray-600 text-lg">{t.spaDesc}</p>
+          </div>
+          {/* Spa content will go here in future */}
+        </section>
+
+        {/* EVENTS SECTION - Placeholder */}
+        <section id="events" className="w-full max-w-6xl min-h-screen flex flex-col justify-center scroll-mt-20 py-16">
+          <div className="text-center">
+            <h2 className="text-4xl font-bold text-gray-800 mb-4">{t.events}</h2>
+            <p className="text-gray-600 text-lg">{t.eventsDesc}</p>
+          </div>
+          {/* Events content will go here in future */}
+        </section>
+
+        {/* CONTACT/GALLERY SECTION */}
+        <section id="contact" className="w-full max-w-6xl scroll-mt-20 py-16">
+          {/* Image Gallery Section */}
+          <div
+            className={`w-full max-w-6xl mb-16 transition-all duration-1000 delay-900 ${
+              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+            }`}
+          >
+            <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
+              {t.gallery}
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {galleryImages.map((image, i) => (
+                <div
+                  key={i}
+                  onClick={() => setLightboxImage(image.url)}
+                  className="relative overflow-hidden rounded-xl shadow-lg cursor-pointer group h-48"
+                >
+                  <img
+                    src={image.url}
+                    alt={image.alt}
+                    loading="lazy"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <svg
+                      className="w-12 h-12 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Floating Scroll Indicator */}
+          <div className="animate-bounce mt-8 flex justify-center">
+            <svg
+              className="w-6 h-6 text-amber-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 14l-7 7m0 0l-7-7m7 7V3"
+              />
+            </svg>
+          </div>
+
+          {/* Footer with enhanced styling */}
+          <div className="mt-16 text-center text-sm text-gray-500 space-y-2">
+            <div className="flex items-center justify-center gap-4 flex-wrap">
+              <span className="flex items-center gap-1">
+                📍 Nairobi, Kenya
+              </span>
+              <span className="hidden md:inline">•</span>
+              <span className="flex items-center gap-1">
+                ☎ +254 712 345 678
+              </span>
+              <span className="hidden md:inline">•</span>
+              <span className="flex items-center gap-1">
+                ✉️ info@kimjaihotel.ke
+              </span>
+            </div>
+            <p className="mt-4 text-xs">© 2025 Kimjai Hotel. All Rights Reserved.</p>
+          </div>
+        </section>
+      </div>
+
+      {/* Lightbox Modal for Gallery Images */}
+      {lightboxImage && (
+        <div
+          onClick={() => setLightboxImage(null)}
+          className="fixed inset-0 bg-black/90 z-[100] flex items-center justify-center p-4 cursor-pointer animate-fadeIn"
+        >
+          <button
+            onClick={() => setLightboxImage(null)}
+            className="absolute top-6 right-6 text-white hover:text-amber-400 transition-colors z-10"
+            aria-label="Close lightbox"
+          >
+            <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          <img
+            src={lightboxImage}
+            alt="Gallery Preview"
+            className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
+          />
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default LandingPage;
+
