@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from "react";
 import Navbar from '../layouts/Navbar';
+import Modal from '../components/Modal';
+import WalkInForm from '../components/Customer/WalkInForm';
+import BookingForm from '../components/Customer/BookingForm';
+import Footer from '../layouts/Footer';
 
 const LandingPage = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [language, setLanguage] = useState("en");
   const [lightboxImage, setLightboxImage] = useState(null);
   const [tableNumber, setTableNumber] = useState(null);
+  const [showWalkInModal, setShowWalkInModal] = useState(false);
+  const [showBookingModal, setShowBookingModal] = useState(false);
+  const [submissionSuccess, setSubmissionSuccess] = useState(false);
 
   // Updated Translations with Navbar items
   const translations = {
@@ -139,6 +146,21 @@ const LandingPage = () => {
     };
   }, []);
 
+  const handleWalkInSubmit = (data) => {
+  console.log('Walk-in submission:', data);
+  // Here you would typically send to your backend API
+  setShowWalkInModal(false);
+  setSubmissionSuccess(true);
+  setTimeout(() => setSubmissionSuccess(false), 3000);
+};
+
+const handleBookingSubmit = (data) => {
+  console.log('Booking submission:', data);
+  // Here you would typically send to your backend API
+  setShowBookingModal(false);
+  setSubmissionSuccess(true);
+  setTimeout(() => setSubmissionSuccess(false), 3000);
+};
 
  return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-white relative overflow-hidden">
@@ -233,51 +255,112 @@ const LandingPage = () => {
             </div>
           </div>
 
-          {/* Hero Action Buttons with staggered animation */}
+
+{/* Hero Action Buttons with staggered animation */}
 <div
   className={`flex flex-col md:flex-row gap-6 mb-12 transition-all duration-1000 delay-500 ${
     isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
   }`}
 >
-  {/* Walk-in Button */}
-  <button className="group px-10 py-5 bg-amber-600 text-white text-lg font-semibold rounded-2xl shadow-lg hover:shadow-2xl hover:bg-amber-700 transition-all duration-300 transform hover:-translate-y-1">
-    <span className="flex items-center gap-2">
-      🍽️ {t.walkIn}
-      <svg
-        className="w-5 h-5 group-hover:translate-x-1 transition-transform"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M9 5l7 7-7 7"
-        />
-      </svg>
-    </span>
-  </button>
+  {/* Walk-In Button with Subtitle */}
+  <div className="flex-1">
+    <button
+      onClick={() => setShowWalkInModal(true)}
+      className="group w-full px-10 py-5 bg-amber-600 text-white text-lg font-semibold rounded-2xl shadow-lg hover:shadow-2xl hover:bg-amber-700 transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden"
+    >
+      {/* Animated Background Pulse */}
+      <span className="absolute inset-0 bg-gradient-to-r from-amber-400 to-orange-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
 
-  {/* Booking Button */}
-  <button className="group px-10 py-5 bg-white border-2 border-amber-600 text-amber-700 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-2xl hover:bg-amber-600 hover:text-white transition-all duration-300 transform hover:-translate-y-1">
-    <span className="flex items-center gap-2">
-      <svg
-        className="w-5 h-5 group-hover:translate-x-1 transition-transform"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M9 5l7 7-7 7"
-        />
-      </svg>
-    </span>
-  </button>
+      <span className="flex flex-col items-center gap-1 relative z-10">
+        <span className="flex items-center gap-2">
+          🍽️ {t.walkIn}
+          <svg
+            className="w-5 h-5 group-hover:translate-x-1 transition-transform"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </span>
+        <span className="text-xs font-normal text-amber-100 opacity-90">
+          Skip the queue, dine now
+        </span>
+      </span>
+    </button>
+  </div>
+
+  {/* Book Room Button with Subtitle */}
+  <div className="flex-1">
+    <button
+      onClick={() => setShowBookingModal(true)}
+      className="group w-full px-10 py-5 bg-white border-2 border-amber-600 text-amber-700 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-2xl hover:bg-amber-600 hover:text-white transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden"
+    >
+      {/* Animated Background Pulse */}
+      <span className="absolute inset-0 bg-gradient-to-r from-amber-400 to-orange-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+
+      <span className="flex flex-col items-center gap-1 relative z-10">
+        <span className="flex items-center gap-2">
+          🛏️ {t.bookRoom}
+          <svg
+            className="w-5 h-5 group-hover:translate-x-1 transition-transform"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </span>
+        <span className="text-xs font-normal text-amber-600 group-hover:text-amber-100 opacity-90 transition-colors">
+          Reserve your perfect stay
+        </span>
+      </span>
+    </button>
+  </div>
 </div>
+
+{/* Success Message Toast */}
+{submissionSuccess && (
+  <div className="fixed top-24 right-6 z-[70] bg-green-500 text-white px-6 py-3 rounded-lg shadow-2xl animate-slideInRight flex items-center gap-2">
+    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+    </svg>
+    <span className="font-semibold">Request submitted successfully!</span>
+  </div>
+)}
+
+{/* Modal Components */}
+<Modal
+  isOpen={showWalkInModal}
+  onClose={() => setShowWalkInModal(false)}
+  title="Walk-In Guest"
+>
+  <WalkInForm
+    onSubmit={handleWalkInSubmit}
+    translations={t}
+  />
+</Modal>
+
+<Modal
+  isOpen={showBookingModal}
+  onClose={() => setShowBookingModal(false)}
+  title="Book Your Room"
+>
+  <BookingForm
+    onSubmit={handleBookingSubmit}
+    translations={t}
+  />
+</Modal>
 </section>
 
         {/* ROOMS SECTION - Placeholder */}
@@ -393,26 +476,81 @@ const LandingPage = () => {
               />
             </svg>
           </div>
+          </section>
 
-          {/* Footer with enhanced styling */}
-          <div className="mt-16 text-center text-sm text-gray-500 space-y-2">
-            <div className="flex items-center justify-center gap-4 flex-wrap">
-              <span className="flex items-center gap-1">
-                📍 Nairobi, Kenya
-              </span>
-              <span className="hidden md:inline">•</span>
-              <span className="flex items-center gap-1">
-                ☎ +254 712 345 678
-              </span>
-              <span className="hidden md:inline">•</span>
-              <span className="flex items-center gap-1">
-                ✉️ info@kimjaihotel.ke
-              </span>
+
+      {/* CONTACT/GALLERY SECTION */}
+        <section id="contact" className="w-full max-w-6xl scroll-mt-20 py-16">
+          {/* Image Gallery Section */}
+          <div
+            className={`w-full max-w-6xl mb-16 transition-all duration-1000 delay-900 ${
+              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+            }`}
+          >
+            <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
+              {t.gallery}
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {galleryImages.map((image, i) => (
+                <div
+                  key={i}
+                  onClick={() => setLightboxImage(image.url)}
+                  className="relative overflow-hidden rounded-xl shadow-lg cursor-pointer group h-48"
+                >
+                  <img
+                    src={image.url}
+                    alt={image.alt}
+                    loading="lazy"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <svg
+                      className="w-12 h-12 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              ))}
             </div>
-            <p className="mt-4 text-xs">© 2025 Kimjai Hotel. All Rights Reserved.</p>
+          </div>
+
+          {/* Floating Scroll to Top Button */}
+          <div className="flex justify-center mt-8">
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="flex flex-col items-center gap-2 text-amber-600 hover:text-amber-700 transition-colors group"
+              aria-label="Scroll to top"
+            >
+              <svg
+                className="w-6 h-6 animate-bounce group-hover:animate-none"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 10l7-7m0 0l7 7m-7-7v18"
+                />
+              </svg>
+              <span className="text-sm font-medium">Back to Top</span>
+            </button>
           </div>
         </section>
       </div>
+
+      {/* Replace old footer with new Footer component */}
+      <Footer translations={t} language={language} />
 
       {/* Lightbox Modal for Gallery Images */}
       {lightboxImage && (
@@ -441,4 +579,3 @@ const LandingPage = () => {
 };
 
 export default LandingPage;
-
